@@ -50,6 +50,8 @@ RUN set -ex \
         rsync \
         netcat \
         locales \
+        procps \
+        vim \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -75,6 +77,11 @@ RUN set -ex \
 
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+
+RUN rm /etc/localtime
+RUN ln /usr/share/zoneinfo/Hongkong /etc/localtime
+
+RUN mkdir ${AIRFLOW_HOME}/dags
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 
